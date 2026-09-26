@@ -111,16 +111,17 @@ class RandomVoice(Star):
         logger.info(f"[random_voice] 已把一条消息转为语音（概率 {probability:.0%}）")
 
     @filter.command("random_voice")
-    async def random_voice_command(self, event: AstrMessageEvent, *args):
+    async def random_voice_command(
+        self, event: AstrMessageEvent, action: str = "", value: str = ""
+    ):
         """会话级控制：/random_voice 开|关|概率 <0~1>"""
         umo = event.unified_msg_origin
         st = self._session_state(umo)
-        tokens = " ".join(str(a) for a in args).split()
-        if not tokens:
+        action = (action or "").strip().lower()
+        value = str(value or "").strip()
+        if not action:
             enabled = st.get("enabled", True)
-            prob = st.get(
-                "probability", self._config_float("probability", 0.3)
-            )
+            prob = st.get("probability", self._config_float("probability", 0.3))
             yield event.plain_result(
                 "随机语音状态："
                 + ("开启" if enabled else "关闭")
@@ -128,20 +129,19 @@ class RandomVoice(Star):
                 + "\n用法：/random_voice 开 ｜ 关 ｜ 概率 <0~1>"
             )
             return
-        head = tokens[0].lower()
-        if head in ("开", "on", "1", "true", "yes"):
+        if action in ("开", "on", "1", "true", "yes"):
             st["enabled"] = True
             yield event.plain_result("已开启本会话的随机语音。")
-        elif head in ("关", "off", "0", "false", "no"):
+        elif action in ("关", "off", "0", "false", "no"):
             st["enabled"] = False
             yield event.plain_result("已关闭本会话的随机语音。")
-        elif head in ("概率", "prob", "p"):
+        elif action in ("概率", "prob", "p"):
             try:
-                value = float(tokens[1])
-            except (IndexError, TypeError, ValueError):
+                prob_value = float(value)
+            except (TypeError, ValueError):
                 yield event.plain_result("用法：/random_voice 概率 <0~1>")
                 return
-            st["probability"] = max(0.0, min(1.0, value))
+            st["probability"] = max(0.0, min(1.0, prob_value))
             yield event.plain_result(
                 f"本会话随机语音概率已设为 {st['probability']:.0%}。"
             )
