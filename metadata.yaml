@@ -1,0 +1,5 @@
+name: random_voice
+desc: 按概率把 AstrBot 发送的文本内容随机转换为语音（TTS）
+version: v1.0.0
+author: Makeh
+repo: ""

@@ -1,0 +1,32 @@
+{
+  "enabled": {
+    "description": "是否启用随机语音",
+    "type": "bool",
+    "default": true
+  },
+  "probability": {
+    "description": "消息被转为语音的概率（0~1）",
+    "type": "float",
+    "default": 0.3
+  },
+  "keep_text": {
+    "description": "转语音时是否同时保留原文文字",
+    "type": "bool",
+    "default": true
+  },
+  "min_chars": {
+    "description": "少于该字符数的消息不转为语音",
+    "type": "int",
+    "default": 1
+  },
+  "max_chars": {
+    "description": "超过该字符数的消息截断后再合成语音",
+    "type": "int",
+    "default": 500
+  },
+  "skip_platforms": {
+    "description": "跳过不转换的平台（如 webchat、telegram）",
+    "type": "list",
+    "default": []
+  }
+}
